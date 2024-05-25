@@ -91,7 +91,7 @@ Macro.add(['button', 'link'], {
 			.ariaClick({
 				namespace : '.macros',
 				role      : passage != null ? 'link' : 'button', // lazy equality for null
-				one       : false 
+				one       : false // lazy equality for null
 			}, this.shadowHandler(
 				this.payload[0].contents !== ''
 					? () => Wikifier.wikifyEval(this.payload[0].contents.trim())
