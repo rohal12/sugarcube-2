@@ -289,7 +289,7 @@ var Wikifier = (() => { // eslint-disable-line no-unused-vars, no-var
 					$link.addClass('link-broken');
 				}
 
-				$link.ariaClick({ one : true }, () => {
+				$link.ariaClick({ one : false }, () => {
 					if (typeof callback === 'function') {
 						callback();
 					}
