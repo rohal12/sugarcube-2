@@ -1655,7 +1655,7 @@
 						el.classList.add('link-broken');
 					}
 
-					jQuery(el).ariaClick({ one : true }, function () {
+					jQuery(el).ariaClick({ one : false }, function () {
 						if (typeof setFn === 'function') {
 							setFn.call(this);
 						}
@@ -1925,7 +1925,7 @@
 						el.classList.add('link-broken');
 					}
 
-					jQuery(el).ariaClick({ one : true }, function () {
+					jQuery(el).ariaClick({ one : false }, function () {
 						if (typeof setFn === 'function') {
 							setFn.call(this);
 						}
