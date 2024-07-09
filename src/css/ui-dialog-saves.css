@@ -34,11 +34,6 @@
 #ui-dialog-body.saves td {
 	padding: 0.33em;
 }
-#ui-dialog-body.saves td:first-child {
-	/* min-width: 1.5em;
-	text-align: center; */
-	display: none !important;
-}
 #ui-dialog-body.saves td:nth-child(3) {
 	line-height: 1.2;
 	width: 100%;

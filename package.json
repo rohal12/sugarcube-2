@@ -8,6 +8,11 @@
     "type": "git",
     "url": "https://github.com/tmedwards/sugarcube-2.git"
   },
+  "main": "build.js",
+  "scripts": {
+    "compile:src": "node build.js",
+    "build": "npm run compile:src"
+  },
   "devDependencies": {
     "@babel/cli": "^7.23.0",
     "@babel/core": "^7.23.2",

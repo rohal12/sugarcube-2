@@ -178,33 +178,50 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 			}
 
 			const $tbody = jQuery(document.createElement('tbody'));
-
+	    	const latestSaves = [...Save.browser.auto.entries(), ...Save.browser.slot.entries()]
+			    .sort((a, b) => b.info.date - a.info.date)
+			    .slice(0,3);
 			// Create auto save UI entries.
 			Save.browser.auto.entries().forEach(({ index, info }) => {
-				/* legacy */
-				const $tdSlot = jQuery(document.createElement('td'));
-				/* /legacy */
 				const $tdLoad = jQuery(document.createElement('td'));
 				const $tdDesc = jQuery(document.createElement('td'));
 				const $tdDele = jQuery(document.createElement('td'));
-
-				// // Add the slot ID.
-				// $tdSlot
-				// 	.attr({
-				// 		title        : `${L10n.get('savesTextBrowserAuto')} ${index + 1}`,
-				// 		'aria-label' : `${L10n.get('savesTextBrowserAuto')} ${index + 1}`
-				// 	})
-				// 	.text(`A${index + 1}`);
+				const $tdId = jQuery(document.createElement('td'));
+				let detailsClass = 'details';
+				if (latestSaves.length >= 1
+					&& info.type === latestSaves.at(0).info.type
+					&& index === latestSaves.at(0).index) {
+					detailsClass = 'details newest';
+				}
+				else if (latestSaves.length >= 2
+					&& info.type === latestSaves.at(1).info.type
+					&& index === latestSaves.at(1).index) {
+					detailsClass = 'details newer';
+				}
+				else if (latestSaves.length >= 3
+					&& info.type === latestSaves.at(2).info.type
+				    && index === latestSaves.at(2).index) {
+					detailsClass = 'details new';
+			    }
 
 				// Add the description and details.
 				jQuery(document.createElement('div'))
 					.text(info.desc)
 					.appendTo($tdDesc);
+				if (info.id === Config.saves.id) {
+					jQuery(document.createElement('div'))
+						.addClass('sameId')
+						.text(info.id)
+						.appendTo($tdId);
+				}
+				else {
+					jQuery(document.createElement('div'))
+						.text(info.id)
+						.appendTo($tdId);
+				}
 				jQuery(document.createElement('div'))
-					.addClass('details')
-					/* legacy */
-					.addClass('datestamp')
-					/* /legacy */
+					.addClass(detailsClass)
+
 					.text(`${L10n.get('savesTextBrowserAuto')}\u00a0${index + 1}\u00a0\u00a0\u2022\u00a0\u00a0`)
 					.append(
 						info.date
@@ -243,10 +260,8 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 				));
 
 				jQuery(document.createElement('tr'))
-					/* legacy */
-					.append($tdSlot)
-					/* /legacy */
 					.append($tdLoad)
+					.append($tdId)
 					.append($tdDesc)
 					.append($tdDele)
 					.appendTo($tbody);
@@ -266,31 +281,46 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 				// Fill configured slots with empty entries.
 				Array.from({ length : Config.saves.maxSlotSaves }, (_, i) => ({ index : i }))
 			).forEach(({ index, info }) => {
-				/* legacy */
-				const $tdSlot = jQuery(document.createElement('td'));
-				/* /legacy */
 				const $tdLoad = jQuery(document.createElement('td'));
+				const $tdId = jQuery(document.createElement('td'));
 				const $tdDesc = jQuery(document.createElement('td'));
 				const $tdDele = jQuery(document.createElement('td'));
 
-				// // Add the slot ID.
-				// $tdSlot
-				// 	.attr({
-				// 		title        : `${L10n.get('savesTextBrowserSlot')} ${index + 1}`,
-				// 		'aria-label' : `${L10n.get('savesTextBrowserSlot')} ${index + 1}`
-				// 	})
-				// 	.text(index + 1);
 
 				if (info) {
+					let detailsClass = 'details';
+					if (latestSaves.length >= 1
+						&& info.type === latestSaves.at(0).info.type
+						&& index === latestSaves.at(0).index) {
+						detailsClass = 'details newest';
+					}
+					else if (latestSaves.length >= 2
+						&& info.type === latestSaves.at(1).info.type
+						&& index === latestSaves.at(1).index) {
+						detailsClass = 'details newer';
+					}
+					else if (latestSaves.length >= 3
+						&& info.type === latestSaves.at(2).info.type
+						&& index === latestSaves.at(2).index) {
+						detailsClass = 'details new';
+					}
 					// Add the description and details.
 					jQuery(document.createElement('div'))
 						.text(info.desc)
 						.appendTo($tdDesc);
+					if (info.id === Config.saves.id) {
+						jQuery(document.createElement('div'))
+					        .addClass('sameId')
+							.text(info.id)
+							.appendTo($tdId);
+					}
+					else {
+						jQuery(document.createElement('div'))
+							.text(info.id)
+							.appendTo($tdId);
+					}
 					jQuery(document.createElement('div'))
-						.addClass('details')
-						/* legacy */
-						.addClass('datestamp')
-						/* /legacy */
+						.addClass(detailsClass)
 						.text(`${L10n.get('savesTextBrowserSlot')}\u00a0${index + 1}\u00a0\u00a0\u2022\u00a0\u00a0`)
 						.append(
 							info.date
@@ -369,10 +399,8 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 				}
 
 				jQuery(document.createElement('tr'))
-					/* legacy */
-					.append($tdSlot)
-					/* /legacy */
 					.append($tdLoad)
+					.append($tdId)
 					.append($tdDesc)
 					.append($tdDele)
 					.appendTo($tbody);

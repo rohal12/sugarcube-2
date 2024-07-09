@@ -934,7 +934,6 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		if (save.id !== Config.saves.id) {
-			throw new Error(L10n.get('saveErrorIdMismatch'));
 		}
 
 		// Delta decode the state history and delete the encoded property.

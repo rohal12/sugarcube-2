@@ -138,6 +138,23 @@ const CONFIG = {
 				dest : 'build/twine2/sugarcube-2/LICENSE'
 			}
 		]
+	},
+	tweego : {
+		build : {
+			src  : 'template/twine2/html.tpl',
+			dest : '../tweego-2.1.1-windows-x64/storyformats/sugarcube-alpha/format.js',
+			json : 'template/twine2/config.json'
+		},
+		copy : [
+			{
+				src  : 'icon.svg',
+				dest : '../tweego-2.1.1-windows-x64/storyformats/sugarcube-alpha/icon.svg'
+			},
+			{
+				src  : 'LICENSE',
+				dest : '../tweego-2.1.1-windows-x64/storyformats/sugarcube-alpha//LICENSE'
+			}
+		]
 	}
 };
 
@@ -174,18 +191,27 @@ const _opts = require('commander')
 	.parse()
 	.opts();
 
-let _buildForTwine1 = true;
-let _buildForTwine2 = true;
+let _buildForTwine1 = false;
+let _buildForTwine2 = false;
+let _buildForTweego = true;
 
 if (_opts.build) {
 	switch (_opts.build) {
 		case '1':
 			_buildForTwine2 = false;
+			_buildForTweego = false;
 			break;
 
 		case '2':
 			_buildForTwine1 = false;
+			_buildForTweego = false;
 			break;
+
+		case '3':
+			_buildForTwine2 = false;
+			_buildForTwine1 = false;
+			break;
+	
 
 		default:
 			die(`unknown Twine major version: ${_opts.build}; valid values: 1 or 2`);
@@ -284,6 +310,42 @@ if (_opts.build) {
 		projectCopy(CONFIG.twine2.copy);
 	}
 
+	// Build for Tweego.
+	if (_buildForTweego && CONFIG.tweego) {
+		console.log('\nBuilding Tweego version:');
+
+		// Process the story format templates and write the outfiles.
+		projectBuild({
+			build     : CONFIG.tweego.build,
+			version   : version, // eslint-disable-line object-shorthand
+			libSource : assembleLibraries(CONFIG.libs),                         // combine the libraries
+			appSource : await compileJavaScript(CONFIG.js, { twine1 : false }), // combine and minify the app JS
+			cssSource : compileStyles(CONFIG.css),                              // combine and minify the app CSS
+
+			postProcess(sourceString) {
+				// Load the output format.
+				let output = require(`./${_path.normalize(this.build.json)}`); // relative path must be prefixed ('./')
+
+				// Merge data into the output format.
+				output = Object.assign(output, {
+					description : output.description.replace(
+						/(['"`])\{\{BUILD_VERSION_MAJOR\}\}\1/g,
+						() => this.version.major
+					),
+					version : this.version.toString(),
+					source  : sourceString
+				});
+
+				// Wrap the output in the `storyFormat()` function.
+				output = `window.storyFormat(${JSON.stringify(output)});`;
+
+				return output;
+			}
+		});
+
+		// Process the files that simply need copied into the build.
+		projectCopy(CONFIG.tweego.copy);
+	}
 	// Update the build ID.
 	writeFileContents('.build', String(version.build));
 })()

@@ -89,15 +89,17 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 				/* eslint-disable max-len */
 				  '<div id="ui-overlay" class="ui-close"></div>'
 				+ '<div id="ui-dialog" tabindex="0" role="dialog" aria-labelledby="ui-dialog-title" aria-modal="true">'
+				+ '<div class="mid-border">'
+				+ '<div class="inner-border">'
 				+     '<div id="ui-dialog-titlebar">'
 				+         '<h1 id="ui-dialog-title"></h1>'
-				+         `<button id="ui-dialog-close" class="ui-close" tabindex="0" aria-label="${L10n.get('textClose')}">\uf00d</button>`
 				+     '</div>'
 				+     '<div id="ui-dialog-body"></div>'
 				+ '</div>'
+				+ '</div>'
+				+ '</div>'
 				/* eslint-enable max-len */
 			);
-
 		// Cache the dialog elements, since they're going to be used often.
 		//
 		// NOTE: We rewrap the elements themselves, rather than simply using
