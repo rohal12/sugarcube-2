@@ -73,24 +73,9 @@ const CONFIG = {
 		}
 	},
 	css : {
-		mixins : 'src/css/_mixins.css',
-		files  : [
+		files : [
 			// The ordering herein is significant.
-			'vendor/normalize.css',
-			'src/css/init-screen.css',
-			'src/css/font-icons.css',
-			'src/css/font-emoji.css',
-			'src/css/core.css',
-			'src/css/core-display.css',
-			'src/css/core-passage.css',
-			'src/css/core-macro.css',
-			'src/css/ui-dialog.css',
-			'src/css/ui-dialog-saves.css',
-			'src/css/ui-dialog-settings.css',
-			'src/css/ui-dialog-legacy.css',
-			'src/css/ui-bar.css',
-			'src/css/ui-debug-bar.css',
-			'src/css/ui-debug-views.css'
+			'vendor/normalize.css'
 		]
 	},
 	libs : [
@@ -420,7 +405,6 @@ function compileStyles(config) {
 	const postcss      = require('postcss');
 	const CleanCSS     = require('clean-css');
 	const excludeRE    = /(?:normalize)\.css$/;
-	const mixinContent = readFileContents(config.mixins);
 
 	return concatFiles(config.files, (contents, filename) => {
 		let css = contents;

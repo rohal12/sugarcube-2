@@ -8,7 +8,7 @@
 ***********************************************************************************************************************/
 /*
 	global Alert, Browser, Config, Dialog, Engine, Fullscreen, Has, LoadScreen, SimpleStore, L10n, Macro,
-	       Outliner, Passage, Save, Scripting, Setting, SimpleAudio, State, Story, UI, UIBar, DebugBar,
+	       Outliner, Passage, Save, Scripting, Setting, SimpleAudio, State, Story, UI, DebugBar,
 	       Util, Visibility, Wikifier, triggerEvent
 */
 /* eslint-disable no-var */
@@ -141,7 +141,6 @@ Object.defineProperty(window, 'SugarCube', {
 		State,
 		Story,
 		UI,
-		UIBar,
 		DebugBar,
 		Util,
 		Visibility,
@@ -194,7 +193,7 @@ jQuery(() => {
 		//
 		// NOTE: Must be done before user scripts are loaded.
 		Dialog.init();
-		UIBar.init();
+		// UIBar.init();
 		Engine.init();
 		Outliner.init();
 
@@ -236,11 +235,14 @@ jQuery(() => {
 		}, Engine.DOM_DELAY);
 	})
 		.then(() => {
+			// Trigger the `:storyinit` global synthetic event.
+			triggerEvent(':storyinit');
+
 			// Run the user init passages.
 			Engine.runUserInit();
 
 			// Start the UI bar interface.
-			UIBar.start();
+			// UIBar.start();
 
 			// Start the engine.
 			Engine.start();

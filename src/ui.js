@@ -431,54 +431,6 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 				.appendTo($dialogBody);
 
 			$dialogBody.append(createSaveList());
-
-			const $slotButtons = jQuery(document.createElement('ul'))
-				.addClass('buttons slots')
-				.appendTo($dialogBody);
-
-			if (Has.fileAPI) {
-				// Add the disk export/import buttons and the hidden `input[type=file]`
-				// element that will be triggered by the `#saves-import` button.
-				const slotImportInput = createFileInput('saves-import-handler', ev => {
-					Save.disk.import(ev)
-						.then(
-							buildSaves,
-							ex => openAlert(`${ex.message.toUpperFirst()}.</p><p>${L10n.get('textAborting')}.`)
-						);
-				});
-
-				$slotButtons
-					.append(createActionItem(
-						'export',
-						null,
-						`${L10n.get('textExport')}\u2026`,
-						L10n.get('savesLabelBrowserExport'),
-						() => Save.disk.export(`saves-export-${Story.name}`)
-					))
-					.append(createActionItem(
-						'import',
-						null,
-						`${L10n.get('textImport')}\u2026`,
-						L10n.get('savesLabelBrowserImport'),
-						() => slotImportInput.click()
-					));
-
-				jQuery(slotImportInput).appendTo($dialogBody);
-			}
-
-			// Add the slots clear button.
-			$slotButtons.append(createActionItem(
-				'clear',
-				null,
-				L10n.get('textClear'),
-				L10n.get('savesLabelBrowserClear'),
-				Save.browser.size > 0
-					? () => {
-						Save.browser.clear();
-						buildSaves();
-					}
-					: null
-			));
 		}
 
 		// Add the disk load and save buttons.

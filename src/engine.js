@@ -8,7 +8,7 @@
 ***********************************************************************************************************************/
 /*
 	global Alert, Config, DebugView, Dialog, Has, LoadScreen, Save, Scripting, State, Story, StyleWrapper, UI,
-	       UIBar, Wikifier, enumFrom, getErrorMessage, now, postdisplay, postrender, predisplay, prehistory,
+	       Wikifier, enumFrom, getErrorMessage, now, postdisplay, postrender, predisplay, prehistory,
 	       prerender, triggerEvent
 */
 
@@ -66,7 +66,7 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			Config.ui.updateStoryElements = false;
 
 			// Remove the default UI bar, including its styles and events.
-			UIBar.destroy();
+			// UIBar.destroy();
 
 			// Remove the default passage display area styles.
 			jQuery(document.head).find('#style-core-display').remove();
