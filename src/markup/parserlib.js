@@ -823,7 +823,7 @@
 				debugView.modes({ block : true });
 			}
 
-			// align=(left|right), title=(title), source=source, forceInternal=(~), link=(link), setter=(setter)
+			// align=(left|right), alt=(alternate), source=source, forceInternal=(~), link=(link), setter=(setter)
 			const setFn = Object.hasOwn(markup, 'setter')
 				? Wikifier.helpers.shadowHandler(Scripting.desugar(markup.setter))
 				: null;
@@ -861,7 +861,7 @@
 			el.src = source;
 
 			if (Object.hasOwn(markup, 'text')) {
-				el.title = Wikifier.helpers.evalText(markup.text);
+				el.alt = Wikifier.helpers.evalText(markup.text);
 			}
 
 			if (Object.hasOwn(markup, 'align')) {
