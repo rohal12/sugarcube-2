@@ -11,7 +11,7 @@ The `sc-icons` font is a custom subset of Font Awesome Free (Solid) v5.15.2 (htt
 
 ### Icon Styling {#guide-icon-font-styling}
 
-The following CSS properties should used with any icon style rule.
+The following CSS properties should be used with any icon style rule.
 
 ```css
 font-family: sc-icons !important;

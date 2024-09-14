@@ -406,6 +406,7 @@
 	* [`Save.browser.clear()`](#save-api-browser-method-clear)
 	* [`Save.browser.continue()`](#save-api-browser-method-continue)
 	* [`Save.browser.isEnabled()`](#save-api-browser-method-isenabled)
+	* [`Save.browser.newest()`](#save-api-browser-method-newest)
 * [Browser Saves: Auto](#save-api-browser-auto)
 	* [`Save.browser.auto.size`](#save-api-browser-auto-getter-size)
 	* [`Save.browser.auto.clear()`](#save-api-browser-auto-method-clear)

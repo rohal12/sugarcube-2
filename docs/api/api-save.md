@@ -242,6 +242,32 @@ if (Save.browser.isEnabled()) {
 }
 ```
 
+<!-- *********************************************************************** -->
+
+### `Save.browser.newest()` → `object` {#save-api-browser-method-newest}
+
+Details the most recent browser save, either auto or slot.
+
+#### History:
+
+* `v2.38.0`: Introduced.
+
+#### Parameters: *none*
+
+#### Returns:
+
+The [descriptor object](#save-api-objects-descriptor) for the save if it exists, elsewise `null`.
+
+#### Throws:
+
+An `Error` instance.
+
+#### Examples:
+
+```js
+console.log('Descriptor of the most recent save:', Save.browser.newest());
+```
+
 
 <!-- ***************************************************************************
 	Browser Saves: Auto
