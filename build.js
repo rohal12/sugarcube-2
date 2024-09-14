@@ -53,7 +53,6 @@ const CONFIG = {
 			'src/macro/macro.js',
 			'src/macro/macrocontext.js',
 			'src/macro/macros/',
-			'src/macro/deprecated-macros.js',
 			'src/dialog.js',
 			'src/engine.js',
 			'src/passage.js',

@@ -6,6 +6,8 @@
 		"**/*.rpyc": true,
 		"**/*.rpa": true,
 		"**/*.rpymc": true,
+		"**/*.md": true,
+		"dist/*": true,
 		"**/cache/": true
 	}
 }
