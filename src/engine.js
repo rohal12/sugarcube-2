@@ -65,8 +65,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			// Disable updates on default UI elements.
 			Config.ui.updateStoryElements = false;
 
-			// Remove the default UI bar, including its styles and events.
-			// UIBar.destroy();
 
 			// Remove the default passage display area styles.
 			jQuery(document.head).find('#style-core-display').remove();
@@ -297,38 +295,30 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		else {
 			const autoloadType = typeof Config.saves._internal_autoload_;
 
-			if (autoloadType === 'string') {
-				if (Config.saves._internal_autoload_ === 'prompt') {
-					UI.buildAutoload();
-					Dialog.open();
+			new Promise((resolve, reject) => {
+				if (
+					Save.browser.size > 0
+					&& (
+						autoloadType === 'boolean' && Config.saves._internal_autoload_
+						|| autoloadType === 'function' && Config.saves._internal_autoload_()
+					)
+				) {
+					return resolve();
 				}
-			}
-			else {
-				new Promise((resolve, reject) => {
-					if (
-						Save.browser.size > 0
-						&& (
-							autoloadType === 'boolean' && Config.saves._internal_autoload_
-							|| autoloadType === 'function' && Config.saves._internal_autoload_()
-						)
-					) {
-						return resolve();
-					}
 
-					reject(); // eslint-disable-line prefer-promise-reject-errors
+				reject(); // eslint-disable-line prefer-promise-reject-errors
+			})
+				.then(() => {
+					if (BUILD_DEBUG) { console.log('\tattempting autoload of browser continue'); }
+
+					Save.browser.continue();
+					engineShow();
 				})
-					.then(() => {
-						if (BUILD_DEBUG) { console.log('\tattempting autoload of browser continue'); }
+				.catch(() => {
+					if (BUILD_DEBUG) { console.log(`\tstarting passage: "${Config.passages.start}"`); }
 
-						Save.browser.continue();
-						engineShow();
-					})
-					.catch(() => {
-						if (BUILD_DEBUG) { console.log(`\tstarting passage: "${Config.passages.start}"`); }
-
-						enginePlay(Config.passages.start);
-					});
-			}
+					enginePlay(Config.passages.start);
+				});
 		}
 	}
 
@@ -718,9 +708,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 				postdisplay[task].call(passage, task);
 			}
 		});
-
-		// Execute UI update events.
-		UI.update();
 
 		// Add the completed debug views for `StoryInit`, `PassageReady`, and `PassageDone`
 		// to the incoming passage element.

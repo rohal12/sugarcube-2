@@ -8,7 +8,7 @@
 ***********************************************************************************************************************/
 /*
 	global Alert, Browser, Config, Dialog, Engine, Fullscreen, Has, LoadScreen, SimpleStore, L10n, Macro,
-	       Outliner, Passage, Save, Scripting, Setting, SimpleAudio, State, Story, UI, DebugBar,
+	       Outliner, Passage, Save, Scripting, Setting, SimpleAudio, State, Story, UI,
 	       Util, Visibility, Wikifier, triggerEvent
 */
 /* eslint-disable no-var */
@@ -127,7 +127,6 @@ Object.defineProperty(window, 'SugarCube', {
 	value : Object.seal(Object.assign(Object.create(null), {
 		Browser,
 		Config,
-		Dialog,
 		Engine,
 		Fullscreen,
 		Has,
@@ -140,8 +139,6 @@ Object.defineProperty(window, 'SugarCube', {
 		SimpleAudio,
 		State,
 		Story,
-		UI,
-		DebugBar,
 		Util,
 		Visibility,
 		Wikifier,
@@ -192,8 +189,6 @@ jQuery(() => {
 		// Initialize the user interfaces.
 		//
 		// NOTE: Must be done before user scripts are loaded.
-		Dialog.init();
-		// UIBar.init();
 		Engine.init();
 		Outliner.init();
 
@@ -220,9 +215,6 @@ jQuery(() => {
 		// Initialize the macros.
 		Macro.init();
 
-		// Initialize the debug bar interface.
-		DebugBar.init();
-
 		// Schedule the start of the engine and interfaces once both the DOM is
 		// reporting non-empty dimensions for the viewport and our loading screen
 		// lock is the only remaining one.
@@ -241,14 +233,8 @@ jQuery(() => {
 			// Run the user init passages.
 			Engine.runUserInit();
 
-			// Start the UI bar interface.
-			// UIBar.start();
-
 			// Start the engine.
 			Engine.start();
-
-			// Start the debug bar interface.
-			DebugBar.start();
 
 			// Trigger the `:storyready` global synthetic event.
 			triggerEvent(':storyready');

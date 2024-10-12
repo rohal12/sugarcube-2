@@ -109,9 +109,6 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 		$dialog  = jQuery($elems.find('#ui-dialog').get(0));
 		$title   = jQuery($elems.find('#ui-dialog-title').get(0));
 		$body    = jQuery($elems.find('#ui-dialog-body').get(0));
-
-		// Insert the dialog elements into the page before the main script.
-		$elems.insertBefore('body>script#script-sugarcube');
 	}
 
 

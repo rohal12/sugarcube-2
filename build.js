@@ -59,9 +59,6 @@ const CONFIG = {
 			'src/save.js',
 			'src/setting.js',
 			'src/story.js',
-			'src/ui.js',
-			'src/uibar.js',
-			'src/debugbar.js',
 			'src/loadscreen.js',
 			'src/lib/deprecated-util.js',
 			'src/sugarcube.js'
