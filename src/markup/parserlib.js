@@ -1678,8 +1678,8 @@
 		profiles  : ['core'],
 		match     : `<${Patterns.htmlTagName}(?:\\s+[^\\u0000-\\u001F\\u007F-\\u009F\\s"'>\\/=]+(?:\\s*=\\s*(?:"[^"]*?"|'[^']*?'|[^\\s"'=<>\`]+))?)*\\s*\\/?>`,
 		tagRe     : new RegExp(`^<(${Patterns.htmlTagName})`),
-		mediaTags : ['audio', 'img', 'source', 'track', 'video'], // NOTE: The `<picture>` element should not be in this list.
-		nobrTags  : ['audio', 'colgroup', 'datalist', 'dl', 'figure', 'meter', 'ol', 'optgroup', 'picture', 'progress', 'ruby', 'select', 'table', 'tbody', 'tfoot', 'thead', 'tr', 'ul', 'video'],
+		mediaTags : ['img', 'source', 'track', 'video'], // NOTE: The `<picture>` element should not be in this list.
+		nobrTags  : ['colgroup', 'datalist', 'dl', 'figure', 'meter', 'ol', 'optgroup', 'picture', 'progress', 'ruby', 'select', 'table', 'tbody', 'tfoot', 'thead', 'tr', 'ul', 'video'],
 		voidTags  : ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'],
 
 		handler(w) {
@@ -1870,7 +1870,6 @@
 						let twineTag;
 
 						switch (tagName) {
-							case 'audio':
 							case 'video':
 								twineTag = `Twine.${tagName}`;
 								break;

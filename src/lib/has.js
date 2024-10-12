@@ -14,15 +14,6 @@ var Has = (() => { // eslint-disable-line no-unused-vars, no-var
 		implementation bugs in various browsers.
 	*/
 
-	// Is the `HTMLAudioElement` API available?
-	const hasAudioElement = (() => {
-		try {
-			return typeof document.createElement('audio').canPlayType === 'function';
-		}
-		catch (ex) { /* no-op */ }
-
-		return false;
-	})();
 
 	// Is the `File` API available?
 	const hasFile = (() => {
@@ -114,7 +105,6 @@ var Has = (() => { // eslint-disable-line no-unused-vars, no-var
 	*******************************************************************************/
 
 	return Object.freeze(Object.assign(Object.create(null), {
-		audio              : hasAudioElement,
 		fileAPI            : hasFile,
 		geolocation        : hasGeolocation,
 		mutationObserver   : hasMutationObserver,

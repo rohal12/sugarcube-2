@@ -16,10 +16,6 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 	let _enableOptionalDebugging = false;
 	let _loadDelay               = 0;
 
-	// Audio settings.
-	let _audioPauseOnFadeToZero = true;
-	let _audioPreloadMetadata   = true;
-
 	// State history settings.
 	let _historyControls  = true;
 	let _historyMaxStates = 40;
@@ -100,16 +96,6 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 			_loadDelay = value;
 		},
 
-		/*
-			Audio settings.
-		*/
-		audio : Object.freeze({
-			get pauseOnFadeToZero() { return _audioPauseOnFadeToZero; },
-			set pauseOnFadeToZero(value) { _audioPauseOnFadeToZero = Boolean(value); },
-
-			get preloadMetadata() { return _audioPreloadMetadata; },
-			set preloadMetadata(value) { _audioPreloadMetadata = Boolean(value); }
-		}),
 
 		/*
 			State history settings.
