@@ -25,11 +25,6 @@ Macro.add('set', {
 		catch (ex) {
 			return this.error(`bad evaluation: ${getErrorMessage(ex)}`);
 		}
-
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ hidden : true });
-		}
 	}
 });
 

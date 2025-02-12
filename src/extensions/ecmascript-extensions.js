@@ -641,13 +641,12 @@
 
 	/*
 		Randomly removes an element from the base array and returns it.
-		[DEPRECATED] Optionally, from within the given bounds.
 	*/
 	Object.defineProperty(Array.prototype, 'pluck', {
 		configurable : true,
 		writable     : true,
 
-		value(/* DEPRECATED: [min ,] max */) {
+		value() {
 			if (this == null) { // lazy equality for null
 				throw new TypeError('Array.prototype.pluck called on null or undefined');
 			}
@@ -747,13 +746,12 @@
 
 	/*
 		Randomly selects an element from the base array and returns it.
-		[DEPRECATED] Optionally, from within the given bounds.
 	*/
 	Object.defineProperty(Array.prototype, 'random', {
 		configurable : true,
 		writable     : true,
 
-		value(/* DEPRECATED: [min ,] max */) {
+		value() {
 			if (this == null) { // lazy equality for null
 				throw new TypeError('Array.prototype.random called on null or undefined');
 			}
@@ -1288,85 +1286,6 @@
 			const { char, end } = _getCodePointStartAndEnd(str, 0);
 
 			return end === -1 ? '' : char.toUpperCase() + str.slice(end + 1);
-		}
-	});
-
-
-	/*******************************************************************************
-		Deprecated Extensions.
-	*******************************************************************************/
-
-	/*
-		[DEPRECATED] Removes and returns all instances of the given elements from the array.
-		*/
-	Object.defineProperty(Array.prototype, 'delete', {
-		configurable : true,
-		writable     : true,
-
-		value(/* needles */) {
-			console.warn('[DEPRECATED] <Array>.delete() is deprecated.');
-
-			if (this == null) { // lazy equality for null
-				throw new TypeError('Array.prototype.delete called on null or undefined');
-			}
-
-			return Array.prototype.deleteAll.apply(this, arguments);
-		}
-	});
-
-	/*
-		[DEPRECATED] Allow users to easily wrap their code in the revive wrapper.
-	*/
-	Object.defineProperty(JSON, 'reviveWrapper', {
-		configurable : true,
-		writable     : true,
-
-		value(code, data) {
-			console.warn('[DEPRECATED] JSON.reviveWrapper() is deprecated.');
-
-			if (typeof code !== 'string') {
-				throw new TypeError('JSON.reviveWrapper code parameter must be a string');
-			}
-
-			return Serial.createReviver(code, data);
-		}
-	});
-
-	/*
-		[DEPRECATED] Returns a decimal number eased from 0 to 1.
-
-		NOTE: The magnitude of the returned value decreases if num < 0.5 or increases if num > 0.5.
-	*/
-	Object.defineProperty(Math, 'easeInOut', {
-		configurable : true,
-		writable     : true,
-
-		value(num) {
-			console.warn('[DEPRECATED] Math.easeInOut() is deprecated.');
-
-			return 1 - (Math.cos(Number(num) * Math.PI) + 1) / 2;
-		}
-	});
-
-	/*
-		[DEPRECATED] Returns the number clamped to the specified bounds.
-	*/
-	Object.defineProperty(Number.prototype, 'clamp', {
-		configurable : true,
-		writable     : true,
-
-		value(/* min, max */) {
-			console.warn('[DEPRECATED] <Number>.clamp() is deprecated.');
-
-			if (this == null) { // lazy equality for null
-				throw new TypeError('Number.prototype.clamp called on null or undefined');
-			}
-
-			if (arguments.length !== 2) {
-				throw new Error(`Number.prototype.clamp called with an incorrect number of parameters (want: 2, received: ${arguments.length})`);
-			}
-
-			return Math.clamp(this, arguments[0], arguments[1]);
 		}
 	});
 })();

@@ -58,10 +58,5 @@ Macro.add(['append', 'prepend', 'replace'], {
 		else if (this.name === 'replace') {
 			$targets.empty();
 		}
-
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ hidden : true });
-		}
 	}
 });

@@ -25,9 +25,5 @@ Macro.add('copy', {
 
 		jQuery(this.output).append($targets.html());
 
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ hidden : true });
-		}
 	}
 });

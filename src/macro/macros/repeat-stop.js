@@ -31,11 +31,6 @@ Macro.add('repeat', {
 			return this.error(ex.message);
 		}
 
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ block : true });
-		}
-
 		const transition = this.args.length > 1 && this.self.t8nRe.test(this.args[1]);
 		const $wrapper   = jQuery(document.createElement('span'))
 			.addClass(`macro-${this.name}`)
@@ -139,10 +134,5 @@ Macro.add('stop', {
 		clearInterval(timerId);
 		timers.delete(timerId);
 		TempState.break = 2;
-
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ hidden : true });
-		}
 	}
 });

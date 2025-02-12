@@ -13,8 +13,6 @@
 */
 Macro.add('include', {
 	handler() {
-		if (this.name === 'display') { console.warn(`[DEPRECATED] <<${this.name}>> macro is deprecated.`); }
-
 		if (this.args.length === 0) {
 			return this.error('no passage specified');
 		}
@@ -32,11 +30,6 @@ Macro.add('include', {
 
 		if (!Story.has(passage)) {
 			return this.error(`passage "${passage}" does not exist`);
-		}
-
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ block : true });
 		}
 
 		passage = Story.get(passage);

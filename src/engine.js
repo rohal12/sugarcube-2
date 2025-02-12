@@ -7,9 +7,8 @@
 
 ***********************************************************************************************************************/
 /*
-	global Alert, Config, DebugView, Dialog, Has, LoadScreen, Save, Scripting, State, Story, StyleWrapper, UI,
-	       Wikifier, enumFrom, getErrorMessage, now, postdisplay, postrender, predisplay, prehistory,
-	       prerender, triggerEvent
+	global Alert, Config,  Has, LoadScreen, Save, Scripting, State, Story, StyleWrapper,
+	       Wikifier, enumFrom, getErrorMessage, now, triggerEvent
 */
 
 var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
@@ -23,9 +22,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 
 	// Minimum delay for DOM actions (in milliseconds).
 	const DOM_DELAY = 40;
-
-	// Cache of the debug view(s) for initialization special passage(s).
-	const _initDebugViews = [];
 
 	// Current state of the engine.
 	let _state = States.Init;
@@ -216,19 +212,7 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		*/
 		Story.getInits().forEach(passage => {
 			try {
-				const debugBuffer = Wikifier.wikifyEval(passage.text);
-
-				if (Config.debug) {
-					const debugView = new DebugView(
-						document.createDocumentFragment(),
-						'special',
-						`${passage.name} [init-tagged]`,
-						`${passage.name} [init-tagged]`
-					);
-					debugView.modes({ hidden : true });
-					debugView.append(debugBuffer);
-					_initDebugViews.push(debugView.output);
-				}
+				Wikifier.wikifyEval(passage.text);
 			}
 			catch (ex) {
 				console.error(ex);
@@ -241,19 +225,7 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		*/
 		if (Story.has('StoryInit')) {
 			try {
-				const debugBuffer = Wikifier.wikifyEval(Story.get('StoryInit').text);
-
-				if (Config.debug) {
-					const debugView = new DebugView(
-						document.createDocumentFragment(),
-						'special',
-						'StoryInit',
-						'StoryInit'
-					);
-					debugView.modes({ hidden : true });
-					debugView.append(debugBuffer);
-					_initDebugViews.push(debugView.output);
-				}
+				Wikifier.wikifyEval(Story.get('StoryInit').text);
 			}
 			catch (ex) {
 				console.error(ex);
@@ -293,32 +265,7 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			engineShow();
 		}
 		else {
-			const autoloadType = typeof Config.saves._internal_autoload_;
-
-			new Promise((resolve, reject) => {
-				if (
-					Save.browser.size > 0
-					&& (
-						autoloadType === 'boolean' && Config.saves._internal_autoload_
-						|| autoloadType === 'function' && Config.saves._internal_autoload_()
-					)
-				) {
-					return resolve();
-				}
-
-				reject(); // eslint-disable-line prefer-promise-reject-errors
-			})
-				.then(() => {
-					if (BUILD_DEBUG) { console.log('\tattempting autoload of browser continue'); }
-
-					Save.browser.continue();
-					engineShow();
-				})
-				.catch(() => {
-					if (BUILD_DEBUG) { console.log(`\tstarting passage: "${Config.passages.start}"`); }
-
-					enginePlay(Config.passages.start);
-				});
+			enginePlay(Config.passages.start);
 		}
 	}
 
@@ -444,7 +391,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			return false;
 		}
 
-		if (BUILD_DEBUG) { console.log(`[Engine/enginePlay(title: "${title}", noHistory: ${noHistory})]`); }
 
 		let passageTitle = title;
 		
@@ -467,9 +413,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		TempState = {}; // eslint-disable-line no-undef
 		State.clearTemporary();
 
-		// Debug view setup.
-		let passageReadyOutput;
-		let passageDoneOutput;
 
 		// Execute the navigation override callback.
 		if (typeof Config.navigation.override === 'function') {
@@ -493,23 +436,14 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		// Execute the pre-history events and tasks.
 		jQuery.event.trigger({
-			/* legacy */
-			passage,
-			/* /legacy */
-
 			type   : ':passageinit',
 			detail : {
 				passage
 			}
 		});
-		Object.keys(prehistory).forEach(task => {
-			if (typeof prehistory[task] === 'function') {
-				prehistory[task].call(passage, task);
-			}
-		});
 
 		// Create a new entry in the history.
-		if (!noHistory) {
+		if (!noHistory && !passage.tags.includes('nohistory')) {
 			State.create(passage.name);
 		}
 
@@ -525,22 +459,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		// will be updated again later at the end.
 		_lastPlay = now();
 
-		// Execute pre-display tasks and the `PassageReady` special passage.
-		Object.keys(predisplay).forEach(task => {
-			if (typeof predisplay[task] === 'function') {
-				predisplay[task].call(passage, task);
-			}
-		});
-
-		if (Story.has('PassageReady')) {
-			try {
-				passageReadyOutput = Wikifier.wikifyEval(Story.get('PassageReady').text);
-			}
-			catch (ex) {
-				console.error(ex);
-				Alert.error('PassageReady', ex.message);
-			}
-		}
 
 		// Update the engine state.
 		_state = States.Rendering;
@@ -569,22 +487,13 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		// Execute pre-render events and tasks.
 		jQuery.event.trigger({
-			/* legacy */
-			content : passageEl,
-			passage,
-			/* /legacy */
-
 			type   : ':passagestart',
 			detail : {
 				content : passageEl,
 				passage
 			}
 		});
-		Object.keys(prerender).forEach(task => {
-			if (typeof prerender[task] === 'function') {
-				prerender[task].call(passage, passageEl, task);
-			}
-		});
+
 
 		// Render the `PassageHeader` passage, if it exists, into the passage element.
 		if (Story.has('PassageHeader')) {
@@ -601,23 +510,12 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		// Execute post-render events and tasks.
 		jQuery.event.trigger({
-			/* legacy */
-			content : passageEl,
-			passage,
-			/* /legacy */
-
 			type   : ':passagerender',
 			detail : {
 				content : passageEl,
 				passage
 			}
 		});
-		Object.keys(postrender).forEach(task => {
-			if (typeof postrender[task] === 'function') {
-				postrender[task].call(passage, passageEl, task);
-			}
-		});
-
 		// Cache the passage container.
 		const containerEl = document.getElementById('passages');
 
@@ -680,71 +578,14 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		// Update the engine state.
 		_state = States.Playing;
 
-		// Execute post-display events, tasks, and the `PassageDone` special passage.
-		if (Story.has('PassageDone')) {
-			try {
-				passageDoneOutput = Wikifier.wikifyEval(Story.get('PassageDone').text);
-			}
-			catch (ex) {
-				console.error(ex);
-				Alert.error('PassageDone', ex.message);
-			}
-		}
-
 		jQuery.event.trigger({
-			/* legacy */
-			content : passageEl,
-			passage,
-			/* /legacy */
-
 			type   : ':passagedisplay',
 			detail : {
 				content : passageEl,
 				passage
 			}
 		});
-		Object.keys(postdisplay).forEach(task => {
-			if (typeof postdisplay[task] === 'function') {
-				postdisplay[task].call(passage, task);
-			}
-		});
 
-		// Add the completed debug views for `StoryInit`, `PassageReady`, and `PassageDone`
-		// to the incoming passage element.
-		if (Config.debug) {
-			let debugView;
-
-			// Prepend the `PassageReady` debug view.
-			if (passageReadyOutput != null) { // lazy equality for null
-				debugView = new DebugView(
-					document.createDocumentFragment(),
-					'special',
-					'PassageReady',
-					'PassageReady'
-				);
-				debugView.modes({ hidden : true });
-				debugView.append(passageReadyOutput);
-				jQuery(passageEl).prepend(debugView.output);
-			}
-
-			// Append the `PassageDone` debug view.
-			if (passageDoneOutput != null) { // lazy equality for null
-				debugView = new DebugView(
-					document.createDocumentFragment(),
-					'special',
-					'PassageDone',
-					'PassageDone'
-				);
-				debugView.modes({ hidden : true });
-				debugView.append(passageDoneOutput);
-				jQuery(passageEl).append(debugView.output);
-			}
-
-			// Prepend the cached initialization debug views, if we're showing the first moment/turn.
-			if (State.turns === 1 && _initDebugViews.length > 0) {
-				jQuery(passageEl).prepend(_initDebugViews);
-			}
-		}
 
 		// Last second post-processing for accessibility and other things.
 		jQuery('#story')
@@ -760,11 +601,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		// Execute post-play events.
 		jQuery.event.trigger({
-			/* legacy */
-			content : passageEl,
-			passage,
-			/* /legacy */
-
 			type   : ':passageend',
 			detail : {
 				content : passageEl,
@@ -779,39 +615,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		_lastPlay = now();
 
 		return passageEl;
-	}
-
-
-	/*******************************************************************************
-		Deprecated Functions.
-	*******************************************************************************/
-
-	/*
-		[DEPRECATED] Play the given passage, optionally without altering the history.
-	*/
-	function engineDisplay(title, link, option) {
-		if (BUILD_DEBUG) { console.log('[Engine/engineDisplay()]'); }
-
-		console.warn('[DEPRECATED] Engine.display() is deprecated.');
-
-		let noHistory = false;
-
-		// Process the option parameter.
-		switch (option) {
-			case undefined:
-				/* no-op */
-				break;
-
-			case 'replace':
-			case 'back':
-				noHistory = true;
-				break;
-
-			default:
-				throw new Error(`Engine.display option parameter called with obsolete value "${option}"; please notify the developer`);
-		}
-
-		enginePlay(title, noHistory);
 	}
 
 
@@ -840,10 +643,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		backward       : { value : engineBackward },
 		forward        : { value : engineForward },
 		show           : { value : engineShow },
-		play           : { value : enginePlay },
-
-		// Deprecated Functions.
-		display           : { value : engineDisplay },
-		minDomActionDelay : { get : () => DOM_DELAY }
+		play           : { value : enginePlay }
 	}));
 })();

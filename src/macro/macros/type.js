@@ -132,11 +132,6 @@ Macro.add('type', {
 			return;
 		}
 
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ block : true });
-		}
-
 		// Set up our base class name and event namespace.
 		const className = `macro-${this.name}`;
 		const namespace = `.${className}`;

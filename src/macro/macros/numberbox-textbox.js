@@ -34,11 +34,6 @@ Macro.add(['numberbox', 'textbox'], {
 			return this.error(`variable name "${this.args[0]}" is missing its sigil ($ or _)`);
 		}
 
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ block : true });
-		}
-
 		const asNumber     = this.name === 'numberbox';
 		const defaultValue = asNumber ? Number(this.args[1]) : this.args[1];
 

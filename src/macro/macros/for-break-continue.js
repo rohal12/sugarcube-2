@@ -96,11 +96,6 @@ Macro.add('for', {
 		let first  = true;
 		let safety = Config.macros.maxLoopIterations;
 
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ block : true });
-		}
-
 		try {
 			TempState.break = null;
 
@@ -162,12 +157,6 @@ Macro.add('for', {
 		catch (ex) {
 			return this.error(ex.message);
 		}
-
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ block : true });
-		}
-
 		try {
 			TempState.break = null;
 
@@ -403,11 +392,6 @@ Macro.add(['break', 'continue'], {
 		}
 		else {
 			return this.error('must only be used in conjunction with its parent macro <<for>>');
-		}
-
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ hidden : true });
 		}
 	}
 });

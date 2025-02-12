@@ -79,51 +79,11 @@ Macro.add('if', {
 
 			// Evaluate the clauses.
 			for (/* declared previously */ i = 0; i < len; ++i) {
-				// Custom debug view setup for the current clause.
-				if (Config.debug) {
-					this
-						.createDebugView(this.payload[i].name, this.payload[i].source)
-						.modes({ nonvoid : false });
-				}
-
-				// Conditional test.
 				if (this.payload[i].name === 'else' || !!evalJavaScript(this.payload[i].args.full)) {
 					success = true;
 					new Wikifier(this.output, this.payload[i].contents);
 					break;
 				}
-				else if (Config.debug) {
-					// Custom debug view setup for a failed conditional.
-					this.debugView.modes({
-						hidden  : true,
-						invalid : true
-					});
-				}
-			}
-
-			// Custom debug view setup for the remaining clauses.
-			if (Config.debug) {
-				for (/* declared previously */ ++i; i < len; ++i) {
-					this
-						.createDebugView(this.payload[i].name, this.payload[i].source)
-						.modes({
-							nonvoid : false,
-							hidden  : true,
-							invalid : true
-						});
-				}
-
-				/*
-					Fake a debug view for `<</if>>`.  We do this to aid the checking of nesting
-					and as a quick indicator of if any of the clauses matched.
-				*/
-				this
-					.createDebugView(`/${this.name}`, `<</${this.name}>>`)
-					.modes({
-						nonvoid : false,
-						hidden  : !success,
-						invalid : !success
-					});
 			}
 		}
 		catch (ex) {

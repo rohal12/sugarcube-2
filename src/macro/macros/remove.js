@@ -24,10 +24,5 @@ Macro.add('remove', {
 		}
 
 		$targets.remove();
-
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ hidden : true });
-		}
 	}
 });

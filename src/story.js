@@ -519,43 +519,6 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 
-	/*******************************************************************************
-		Deprecated Functions.
-	*******************************************************************************/
-
-	function lookup(key, value  /* legacy */, sortKey = 'name'/* /legacy */) {
-		console.warn('[DEPRECATED] Story.lookup() is deprecated.');
-
-		/* eslint-disable eqeqeq, no-nested-ternary, max-len */
-		return filter(passage => {
-			// Objects (sans `null`).
-			if (typeof passage[key] === 'object' && passage[key] !== null) {
-				// The only object type currently supported is `Array`, since the
-				// non-method `Passage` object properties currently yield only either
-				// primitives or arrays.
-				return passage[key] instanceof Array && passage[key].some(m => sameValueZero(m, value));
-			}
-
-			// All other types (incl. `null`).
-			return sameValueZero(passage[key], value);
-		})
-			.sort((a, b) => a[sortKey] == b[sortKey] ? 0 : a[sortKey] < b[sortKey] ? -1 : +1); // lazy equality for null
-		/* eslint-enable eqeqeq, no-nested-ternary, max-len */
-	}
-
-	function lookupWith(predicate /* legacy */, sortKey = 'name'/* /legacy */) {
-		console.warn('[DEPRECATED] Story.lookupWith() is deprecated.');
-
-		if (typeof predicate !== 'function') {
-			throw new TypeError('Story.lookupWith() predicate parameter must be a function');
-		}
-
-		/* eslint-disable eqeqeq, no-nested-ternary, max-len */
-		return filter(predicate)
-			.sort((a, b) => a[sortKey] == b[sortKey] ? 0 : a[sortKey] < b[sortKey] ? -1 : +1); // lazy equality for null
-		/* eslint-enable eqeqeq, no-nested-ternary, max-len */
-	}
-
 
 	/*******************************************************************************
 		Object Exports.
@@ -581,23 +544,6 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 		getScripts : { value : getScripts },
 		getStyles  : { value : getStyles },
 		getWidgets : { value : getWidgets },
-		has        : { value : has },
-
-		/* legacy */
-		domId : {
-			get() {
-				console.warn('[DEPRECATED] Story.domId is deprecated.');
-				return getId();
-			}
-		},
-		title : {
-			get() {
-				console.warn('[DEPRECATED] Story.title is deprecated.');
-				return getName();
-			}
-		},
-		lookup     : { value : lookup },
-		lookupWith : { value : lookupWith }
-		/* /legacy */
+		has        : { value : has }
 	}));
 })();

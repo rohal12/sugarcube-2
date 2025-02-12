@@ -44,27 +44,10 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 	let _savesMaxSlot      = 8;
 	let _savesMetadata;
 	let _savesVersion;
-	/* legacy */
-	let _savesAutoload; // [DEPRECATED]
-	/* /legacy */
 
 	// UI settings.
 	let _uiStowBarInitially    = 800;
 	let _uiUpdateStoryElements = true;
-
-
-	/*******************************************************************************
-		Error Constants.
-	*******************************************************************************/
-
-	const errMacrosIfAssignmentErrorDeprecated = '[DEPRECATED] Config.macros.ifAssignmentError has been deprecated, see Config.enableOptionalDebugging instead';
-	const errPassagesDescriptionsDeprecated    = '[DEPRECATED] Config.passages.descriptions has been deprecated, see Config.saves.descriptions instead';
-	const errSavesAutoloadDeprecated           = '[DEPRECATED] Config.saves.autoload has been deprecated, see the Save.browser.continue API instead';
-	const _baseSavesAutosaveDeprecated         = '[DEPRECATED] Config.saves.autosave has been deprecated';
-	const errSavesOnLoadDeprecated             = '[DEPRECATED] Config.saves.onLoad has been deprecated, see the Save.onLoad API instead';
-	const errSavesOnSaveDeprecated             = '[DEPRECATED] Config.saves.onSave has been deprecated, see the Save.onSave API instead';
-	const errSavesSlotsDeprecated              = '[DEPRECATED] Config.saves.slots has been deprecated, see Config.saves.maxSlotSaves instead';
-	const errSavesTryDiskOnMobileDeprecated    = '[DEPRECATED] Config.saves.tryDiskOnMobile has been deprecated';
 
 
 	/*******************************************************************************
@@ -147,16 +130,6 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 			get typeVisitedPassages() { return _macrosTypeVisitedPassages; },
 			set typeVisitedPassages(value) { _macrosTypeVisitedPassages = Boolean(value); },
 
-			/* legacy */
-			// Die if the deprecated macros if assignment error getter is accessed.
-			get ifAssignmentError() { throw new Error(errMacrosIfAssignmentErrorDeprecated); },
-			// Warn if the deprecated macros if assignment error setter is assigned to,
-			// while also setting `Config.enableOptionalDebugging` for compatibilities sake.
-			set ifAssignmentError(value) {
-				console.warn(errMacrosIfAssignmentErrorDeprecated);
-				Config.enableOptionalDebugging = value;
-			}
-			/* /legacy */
 		}),
 
 		/*
@@ -237,51 +210,6 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 				_passagesTransitionOut = value;
 			},
 
-			/* legacy */
-			// Die if the deprecated passages descriptions getter is accessed.
-			get descriptions() { throw new Error(errPassagesDescriptionsDeprecated); },
-			// Warn if deprecated passages descriptions setter is assigned to,
-			// then pass the value to the `Config.saves.descriptions` for
-			// compatibilities sake.
-			set descriptions(value) {
-				console.warn(errPassagesDescriptionsDeprecated);
-
-				switch (typeof value) {
-					case 'boolean': {
-						if (value && !Config.saves.descriptions) {
-							Config.saves.descriptions = function () {
-								return State.passage;
-							};
-						}
-
-						break;
-					}
-
-					case 'function': {
-						if (!Config.saves.descriptions) {
-							Config.saves.descriptions = value;
-						}
-
-						break;
-					}
-
-					case 'undefined':
-					case 'object': {
-						if (value && !Config.saves.descriptions) {
-							const dict = value;
-							Config.saves.descriptions = function () {
-								return Object.hasOwn(dict, State.passage) && dict[State.passage];
-							};
-						}
-
-						break;
-					}
-
-					default:
-						throw new TypeError(`Config.passages.descriptions must be a boolean, object, function, or null/undefined (received: ${getTypeOf(value)})`);
-				}
-			}
-			/* /legacy */
 		}),
 
 		/*
@@ -351,130 +279,6 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 			get version() { return _savesVersion; },
 			set version(value) { _savesVersion = value; },
 
-			/* legacy */
-			get _internal_autoload_() { // eslint-disable-line camelcase
-				return _savesAutoload;
-			},
-			// Warn if the deprecated autoload getter is accessed.
-			get autoload() {
-				console.warn(errSavesAutoloadDeprecated);
-				return _savesAutoload;
-			},
-			// Warn if the deprecated autoload setter is assigned to.
-			set autoload(value) {
-				console.warn(errSavesAutoloadDeprecated);
-
-				if (value != null) { // lazy equality for null
-					const valueType = getTypeOf(value);
-
-					if (
-						valueType !== 'boolean'
-						&& (valueType !== 'string' || value !== 'prompt')
-						&& valueType !== 'function'
-					) {
-						throw new TypeError(`Config.saves.autoload must be a boolean, string ('prompt'), function, or null/undefined (received: ${valueType})`);
-					}
-				}
-
-				_savesAutoload = value;
-			},
-
-			// Die if the deprecated saves autosave getter is accessed.
-			get autosave() {
-				throw new Error(`${_baseSavesAutosaveDeprecated}, see Config.saves.maxAutoSaves and Config.saves.isAllowed instead`);
-			},
-			// Die or warn if the deprecated saves autosave setter is assigned to,
-			// while also setting `Config.saves.maxAutoSaves` and, possibly,
-			// `Config.saves.isAllowed` for compatibilities sake.
-			set autosave(value) {
-				switch (typeof value) {
-					case 'boolean':
-						console.warn(`${_baseSavesAutosaveDeprecated}, for boolean usage see Config.saves.maxAutoSaves instead`);
-						break;
-
-					case 'function': {
-						console.warn(`${_baseSavesAutosaveDeprecated}, for function usage see Config.saves.isAllowed instead`);
-
-						if (!Config.saves.isAllowed) {
-							const callback = value;
-							Config.saves.isAllowed = function (saveType) {
-								// Allow all other types while testing auto saves.
-								return saveType !== Save.Type.Auto || callback(saveType);
-							};
-						}
-
-						break;
-					}
-
-					default: {
-						console.warn(`${_baseSavesAutosaveDeprecated}, for tag usage see Config.saves.isAllowed instead`);
-
-						if (
-							!(value instanceof Array)
-							|| value.length === 0
-							|| value.some(tag => typeof tag !== 'string')
-						) {
-							const valueType = getTypeOf(value);
-							throw new TypeError(`Config.saves.autosave must be a boolean, Array<string>, function, or null/undefined (received: ${valueType}${valueType === 'Array' ? '<any>' : ''})`);
-						}
-
-						if (!Config.saves.isAllowed) {
-							const userTags = value;
-							Config.saves.isAllowed = function (saveType) {
-								// Allow all other types while testing auto saves.
-								return (
-									saveType !== Save.Type.Auto
-									|| userTags.includesAny(Story.get(State.passage).tags)
-								);
-							};
-						}
-
-						break;
-					}
-				}
-
-				if (Config.saves.maxAutoSaves === 0) {
-					Config.saves.maxAutoSaves = 1;
-				}
-			},
-
-			// Die if the deprecated saves onLoad handler getter is accessed.
-			get onLoad() { throw new Error(errSavesOnLoadDeprecated); },
-			// Warn if the deprecated saves onLoad handler setter is assigned to, then
-			// pass the handler to the `Save.onLoad` API for compatibilities sake.
-			set onLoad(value) {
-				console.warn(errSavesOnLoadDeprecated);
-				Save.onLoad.add(value);
-			},
-
-			// Die if the deprecated saves onSave handler getter is accessed.
-			get onSave() { throw new Error(errSavesOnSaveDeprecated); },
-			// Warn if the deprecated saves onSave handler setter is assigned to, then
-			// pass the handler to the `Save.onSave` API for compatibilities sake.
-			set onSave(value) {
-				console.warn(errSavesOnSaveDeprecated);
-				Save.onSave.add(value);
-			},
-
-			// Die if the deprecated saves slots getter is accessed.
-			get slots() { throw new Error(errSavesSlotsDeprecated); },
-			// Warn if the deprecated saves slots setter is assigned to, then pass
-			// the value to the `Config.saves.maxSlotSaves` for compatibilities
-			// sake.
-			set slots(value) {
-				console.warn(errSavesSlotsDeprecated);
-				Config.saves.maxSlotSaves = value;
-			},
-
-			// Warn if the deprecated saves tryDiskOnMobile getter is accessed, then
-			// return `true`.
-			get tryDiskOnMobile() {
-				console.warn(errSavesTryDiskOnMobileDeprecated);
-				return true;
-			},
-			// Warn if the deprecated saves tryDiskOnMobile setter is assigned to.
-			set tryDiskOnMobile(value) { console.warn(errSavesTryDiskOnMobileDeprecated); }
-			/* /legacy */
 		}),
 
 		/*

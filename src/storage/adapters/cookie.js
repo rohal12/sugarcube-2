@@ -271,62 +271,8 @@ SimpleStore.adapters.push((() => {
 			_ok = false;
 		}
 
-		/* legacy */
-		// Attempt to update the cookie stores, if necessary.  This should happen only during initialization.
-		if (_ok) {
-			_updateCookieStores(storageId);
-		}
-		/* /legacy */
-
 		return _ok;
 	}
-
-	/* legacy */
-	// Updates old non-segmented cookie stores into segmented stores.
-	function _updateCookieStores(storageId) {
-		if (document.cookie === '') {
-			return;
-		}
-
-		const oldPrefix     = `${storageId}.`;
-		const oldPrefixRe   = new RegExp(`^${RegExp.escape(oldPrefix)}`);
-		const persistPrefix = `${storageId}!.`;
-		const sessionPrefix = `${storageId}*.`;
-		const sessionTestRe = /\.(?:state|rcWarn)$/;
-		const cookies       = document.cookie.split(/;\s*/);
-
-		for (let i = 0; i < cookies.length; ++i) {
-			const kvPair = cookies[i].split('=');
-			const key    = decodeURIComponent(kvPair[0]);
-
-			if (oldPrefixRe.test(key)) {
-				// NOTE: All stored values are serialized and an empty string will always
-				// serialize to a non-empty string.  Therefore, receiving an empty string
-				// here denotes a deleted value rather than a serialized empty string, so
-				// we skip processing of such pairs.
-				const value = decodeURIComponent(kvPair[1]);
-
-				if (value !== '') {
-					const persist = !sessionTestRe.test(key);
-
-					// Delete the old k/v pair.
-					CookieAdapter._setCookie(
-						key,
-						undefined,
-						_MIN_EXPIRY
-					);
-
-					// Set the new k/v pair.
-					CookieAdapter._setCookie(
-						key.replace(oldPrefixRe, () => persist ? persistPrefix : sessionPrefix),
-						value,
-						persist ? _MAX_EXPIRY : undefined
-					);
-				}
-			}
-		}
-	}
-	/* /legacy */
 
 
 	/*******************************************************************************

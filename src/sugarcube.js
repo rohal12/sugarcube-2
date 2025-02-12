@@ -7,9 +7,8 @@
 
 ***********************************************************************************************************************/
 /*
-	global Alert, Browser, Config, Dialog, Engine, Fullscreen, Has, LoadScreen, SimpleStore, L10n, Macro,
-	       Outliner, Passage, Save, Scripting, Setting, SimpleAudio, State, Story, UI,
-	       Util, Visibility, Wikifier, triggerEvent
+	global Alert, Browser, Config, Engine, Fullscreen, Has, LoadScreen, SimpleStore, L10n, Macro,
+	       Outliner, Passage, Save, Scripting, Setting, State, Story,  Visibility, Wikifier, triggerEvent
 */
 /* eslint-disable no-var */
 
@@ -110,11 +109,6 @@ var storage = null;
 	Legacy variables.
 */
 var macros = {};      // Legacy macros object.
-var postdisplay = {}; // Post-display task callbacks object.
-var postrender = {};  // Post-render task callbacks object.
-var predisplay = {};  // Pre-display task callbacks object.
-var prehistory = {};  // Pre-history task callbacks object.
-var prerender = {};   // Pre-render task callbacks object.
 /* eslint-enable no-unused-vars */
 
 /*
@@ -136,10 +130,8 @@ Object.defineProperty(window, 'SugarCube', {
 		Save,
 		Scripting,
 		Setting,
-		SimpleAudio,
 		State,
 		Story,
-		Util,
 		Visibility,
 		Wikifier,
 		session,

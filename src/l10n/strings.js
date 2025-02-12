@@ -104,9 +104,6 @@ var l10nStrings = { // eslint-disable-line no-unused-vars, no-var
 
 	uiBarLabelForward : 'Go forward within the {textIdentity} history',
 
-	// [DEPRECATED]
-	uiBarLabelJumpto : 'Jump to a specific point within the {textIdentity} history',
-
 
 	/*******************************************************************************
 		Dialog: Alert.
@@ -214,34 +211,5 @@ var l10nStrings = { // eslint-disable-line no-unused-vars, no-var
 	macroBackText : 'Back',
 
 	// (verb) go/send back
-	macroReturnText : 'Return',
-
-
-	/*******************************************************************************
-		[DEPRECATED] Dialog: Autoload.
-	*******************************************************************************/
-
-	autoloadTitle : 'Autoload',
-
-	autoloadMesgPrompt : 'An autosave exists. Load it now or go to the start?',
-
-	autoloadTextCancel : 'Go to start',
-
-	autoloadTextOk : 'Load autosave',
-
-
-	/*******************************************************************************
-		[DEPRECATED] Dialog: Jump To.
-	*******************************************************************************/
-
-	jumptoTitle : 'Jump To',
-
-	jumptoMesgUnavailable : 'No jump points currently available\u2026',
-
-
-	/*******************************************************************************
-		[DEPRECATED] Dialog: Share.
-	*******************************************************************************/
-
-	shareTitle : 'Share'
+	macroReturnText : 'Return'
 };

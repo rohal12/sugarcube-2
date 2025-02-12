@@ -132,10 +132,6 @@
 
 	l10nStrings.uiBarLabelForward = 'Go forward within the {textIdentity} history';
 
-	// [DEPRECATED]
-	l10nStrings.uiBarLabelJumpto = 'Jump to a specific point within the {textIdentity} history';
-
-
 	/*******************************************************************************
 		Dialog: Alert.
 	*******************************************************************************/
@@ -243,33 +239,4 @@
 
 	// (verb) go/send back
 	l10nStrings.macroReturnText = 'Return';
-
-
-	/*******************************************************************************
-		[DEPRECATED] Dialog: Autoload.
-	*******************************************************************************/
-
-	l10nStrings.autoloadTitle = 'Autoload';
-
-	l10nStrings.autoloadMesgPrompt = 'An autosave exists. Load it now or go to the start?';
-
-	l10nStrings.autoloadTextCancel = 'Go to start';
-
-	l10nStrings.autoloadTextOk = 'Load autosave';
-
-
-	/*******************************************************************************
-		[DEPRECATED] Dialog: Jump To.
-	*******************************************************************************/
-
-	l10nStrings.jumptoTitle = 'Jump To';
-
-	l10nStrings.jumptoMesgUnavailable = 'No jump points currently available\u2026';
-
-
-	/*******************************************************************************
-		[DEPRECATED] Dialog: Share.
-	*******************************************************************************/
-
-	l10nStrings.shareTitle = 'Share';
 })();

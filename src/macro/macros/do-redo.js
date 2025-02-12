@@ -86,12 +86,6 @@
 				return;
 			}
 
-			// Custom debug view setup.
-			if (Config.debug) {
-				// QUESTION: Should this `elTag` check be more robust?
-				this.debugView.modes({ block : elTag !== 'span' });
-			}
-
 			// Create a target to hold our contents.
 			const $target = jQuery(document.createElement(elTag))
 				.addClass(`macro-${this.name} ${eventClass}`)

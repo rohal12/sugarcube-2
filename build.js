@@ -36,7 +36,6 @@ const CONFIG = {
 			'src/storage/simplestore.js',
 			'src/storage/adapters/webstorage.js',
 			'src/storage/adapters/cookie.js',
-			'src/lib/debugview.js',
 			'src/lib/nodetyper.js',
 			'src/lib/stylewrapper.js',
 			'src/lib/diff.js',
@@ -58,7 +57,6 @@ const CONFIG = {
 			'src/setting.js',
 			'src/story.js',
 			'src/loadscreen.js',
-			'src/lib/deprecated-util.js',
 			'src/sugarcube.js'
 		],
 		wrap : {

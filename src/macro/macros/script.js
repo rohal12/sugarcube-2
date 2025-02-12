@@ -35,11 +35,6 @@ Macro.add('script', {
 			return this.error(`bad evaluation: ${getErrorMessage(ex)}`);
 		}
 
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.createDebugView();
-		}
-
 		if (output.hasChildNodes()) {
 			this.output.appendChild(output);
 		}

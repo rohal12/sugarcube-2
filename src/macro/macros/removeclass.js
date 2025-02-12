@@ -29,10 +29,5 @@ Macro.add('removeclass', {
 		else {
 			$targets.removeClass();
 		}
-
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ hidden : true });
-		}
 	}
 });

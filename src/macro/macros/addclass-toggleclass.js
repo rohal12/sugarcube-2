@@ -35,10 +35,5 @@ Macro.add(['addclass', 'toggleclass'], {
 				$targets.toggleClass(this.args[1].trim());
 				break;
 		}
-
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ hidden : true });
-		}
 	}
 });

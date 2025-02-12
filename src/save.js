@@ -908,18 +908,6 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 		Marshaling Functions.
 	*******************************************************************************/
 
-	/* legacy */
-	function migrateLegacyV2SaveDetail(save) {
-		switch (save.type) {
-			case Type.Auto:   return { type : 'autosave' };
-			case Type.Slot:   return { type : 'slot' };
-			case Type.Disk:   return { type : 'disk' };
-			case Type.Base64: return { type : 'serialize' };
-		}
-
-		throw new Error(`save.type must be an integer (received: ${typeof save.type})`);
-	}
-	/* /legacy */
 
 	function marshal(details) {
 		if (BUILD_DEBUG) { console.log(`[Save/marshal({ type : "${details.type}" })]`); }
@@ -937,9 +925,6 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 		// Call any `onSave` handlers.
 		onSaveHandlers.forEach(fn => fn(
 			save
-			/* legacy */
-			, migrateLegacyV2SaveDetail(save)
-			/* /legacy */
 		));
 
 		// Delta encode the state history and delete the non-encoded property.
@@ -1163,157 +1148,6 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 				delete : { value : onSaveDelete },
 				size   : { get : onSaveSize }
 			}))
-		},
-
-		/*
-			Legacy API.
-		*/
-		get : {
-			value() {
-				throw new Error('[REMOVED] Save.get() has been removed.');
-			}
-		},
-		clear : {
-			value() {
-				console.warn('[DEPRECATED] Save.clear() is deprecated.');
-				return browserClear();
-			}
-		},
-		ok : {
-			value() {
-				console.warn('[DEPRECATED] Save.ok() is deprecated.');
-				return browserIsEnabled();
-			}
-		},
-
-		// Autosave Functions.
-		autosave : {
-			value : Object.preventExtensions(Object.create(null, {
-				ok : {
-					value() {
-						console.warn('[DEPRECATED] Save.autosave.ok() is deprecated.');
-						return autoIsEnabled();
-					}
-				},
-				has : {
-					value() {
-						console.warn('[DEPRECATED] Save.autosave.has() is deprecated.');
-						return autoHas(0);
-					}
-				},
-				get : {
-					value() {
-						console.warn('[DEPRECATED] Save.autosave.get() is deprecated.');
-						return autoGet(0);
-					}
-				},
-				load : {
-					value() {
-						console.warn('[DEPRECATED] Save.autosave.load() is deprecated.');
-						return autoLoad(0);
-					}
-				},
-				save : {
-					value(...args) {
-						console.warn('[DEPRECATED] Save.autosave.save() is deprecated.');
-						return autoSave(...args);
-					}
-				},
-				delete : {
-					value() {
-						console.warn('[DEPRECATED] Save.autosave.delete() is deprecated.');
-						return autoDelete(0);
-					}
-				}
-			}))
-		},
-
-		// Slots Functions.
-		slots : {
-			value : Object.preventExtensions(Object.create(null, {
-				ok : {
-					value() {
-						console.warn('[DEPRECATED] Save.slots.ok() is deprecated.');
-						return slotIsEnabled();
-					}
-				},
-				length : {
-					get() {
-						console.warn('[DEPRECATED] Save.slots.length is deprecated.');
-						return Config.saves.maxSlotSaves;
-					}
-				},
-				isEmpty : {
-					value() {
-						console.warn('[DEPRECATED] Save.slots.isEmpty() is deprecated.');
-						return slotSize() === 0;
-					}
-				},
-				count : {
-					value() {
-						console.warn('[DEPRECATED] Save.slots.count() is deprecated.');
-						return slotSize();
-					}
-				},
-				has : {
-					value(...args) {
-						console.warn('[DEPRECATED] Save.slots.has() is deprecated.');
-						return slotHas(...args);
-					}
-				},
-				get : {
-					value(...args) {
-						console.warn('[DEPRECATED] Save.slots.get() is deprecated.');
-						return slotGet(...args);
-					}
-				},
-				load : {
-					value(...args) {
-						console.warn('[DEPRECATED] Save.slots.load() is deprecated.');
-						return slotLoad(...args);
-					}
-				},
-				save : {
-					value(...args) {
-						console.warn('[DEPRECATED] Save.slots.save() is deprecated.');
-						return slotSave(...args);
-					}
-				},
-				delete : {
-					value(...args) {
-						console.warn('[DEPRECATED] Save.slots.delete() is deprecated.');
-						return slotDelete(...args);
-					}
-				}
-			}))
-		},
-
-		// Disk Import/Export Functions.
-		export : {
-			value(...args) {
-				console.warn('[DEPRECATED] Save.export() is deprecated.');
-				return diskSave(...args);
-			}
-		},
-		import : {
-			value(...args) {
-				console.warn('[DEPRECATED] Save.import() is deprecated.');
-				return diskLoad(...args);
-			}
-		},
-
-		// Serialization Saves Functions.
-		serialize : {
-			value(...args) {
-				console.warn('[DEPRECATED] Save.serialize() is deprecated.');
-				return base64Save(...args);
-			}
-		},
-		deserialize : {
-			value(...args) {
-				console.warn('[DEPRECATED] Save.deserialize() is deprecated.');
-				return base64Load(...args);
-			}
 		}
 	}));
 })();

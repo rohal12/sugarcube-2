@@ -34,11 +34,6 @@ Macro.add('textarea', {
 			return this.error(`variable name "${this.args[0]}" is missing its sigil ($ or _)`);
 		}
 
-		// Custom debug view setup.
-		if (Config.debug) {
-			this.debugView.modes({ block : true });
-		}
-
 		const varId        = createSlug(varName);
 		const defaultValue = this.args[1];
 		const autofocus    = this.args[2] === 'autofocus';
